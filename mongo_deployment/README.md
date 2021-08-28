@@ -1,24 +1,54 @@
 # Kubernetes Mongo Deployment
 
 To start with kubernetes and deploy mongodb cluster 
+For this deployment, we are using mongodb and mongo-express for interactions 
 
-1. First, we have to create the cluster using $minikube$
-```bash
-    minikube start 
+Deployment process
+1. Add the secret credentials in the cluster
+``` 
+kubectl apply -f mongo_config_map.yaml
 ```
-the command will start a local cluster and now we have to start deployment 
-For checking the cluster is running fine or not 
+For checking if it successfully applied 
 ```
-kubectl get all 
+kubectl get secrets
+
+or 
+
+kubectl describe secrets
 ```
 
-For getting complete details about the cluster 
+2. Deploy the MongoDB and start the DB service 
+
 ```
-kubectl describe all
+kubectl apply -f mongo-deployment.yaml
 ```
 
-2. Now, we have to deploy 
-    i. mongo-secrets
-    ii. config_map
-    iii. mongo_db_deployment
-    iv. mongo_express
+For checking 
+```
+kubectl get pods
+
+or 
+
+kubectl get pod mongo-db-xxxx --watch
+```
+
+To get the logs 
+```
+kubectl logs mongo-db-xxxxx 
+```
+
+3. Add Configuration Map
+```
+kubectl apply -f mongo_config_map.yaml
+```
+
+4. Add Mongo-express for interactions
+
+```
+kubectl apply -f mongo-express.yaml
+```
+
+5. Exposing the service 
+```
+minikube service mongodb-express
+```
